@@ -23,6 +23,6 @@ class BookRoomModel(models.Model):
     end = models.DateTimeField()
 
     def __str__(self):
-        return self.resident
+        return self.resident[23:-4]
 
 
