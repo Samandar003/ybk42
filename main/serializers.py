@@ -10,6 +10,6 @@ class RoomSerializer(serializers.ModelSerializer):
 class BookRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookRoomModel
-        fields = "__all__"
+        fields = ['resident', 'start', 'end']
 
 
