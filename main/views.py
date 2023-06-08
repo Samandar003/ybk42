@@ -15,11 +15,11 @@ from django_filters.rest_framework import DjangoFilterBackend
 class RoomModelViewSet(ModelViewSet):
     serializer_class = RoomSerializer
     queryset = RoomModel.objects.all()
+    http_method_names = ['get', 'post']
     filter_backends = [filters.SearchFilter]
     search_fields = ['name',]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['type']
-    http_method_names = ['GET', 'POST']
 
     def get_queryset(self):
         queryset = self.queryset

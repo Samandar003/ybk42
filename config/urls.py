@@ -13,7 +13,7 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="nazimburanov.uz API",
+      title="Ybky42 API",
       default_version='v1',
       description="Swagger Docs for RESTAPI",
       contact=openapi.Contact("Samandar Shoyimov <samandar20527@gmail.com>"),
