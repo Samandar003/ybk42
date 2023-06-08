@@ -19,6 +19,7 @@ class RoomModelViewSet(ModelViewSet):
     search_fields = ['name',]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['type']
+    http_method_names = ['GET', 'POST']
 
     def get_queryset(self):
         queryset = self.queryset
