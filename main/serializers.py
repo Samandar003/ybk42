@@ -2,6 +2,7 @@ from .models import RoomModel, BookRoomModel
 from rest_framework import serializers
 from django.utils import timezone
 from datetime import date, datetime
+from rest_framework import serializers
 
 class RoomSerializer(serializers.ModelSerializer):
     type = serializers.ChoiceField(choices=RoomModel.CHOICES)
