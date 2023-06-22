@@ -67,50 +67,68 @@ class RoomModelViewSet(ModelViewSet):
             serializer = AvalibilitySerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             date = datetime.strptime(serializer.data.get('date'), '%Y-%m-%d').date()
-            booked_time_slots = BookRoomModel.objects.filter(
-            room_id=room,
-            start__date=date
-            ).values_list('start', 'end')
-            # booked_time_slots = [(make_naive(start), make_naive(end)) for start, end in booked_time_slots]
+            booked_time_periods = BookRoomModel.objects.filter(
+                room_id=room,
+                start__date=date
+            ).order_by('start')
 
-            start_datetime = datetime.combine(date, time.min)
-            end_datetime = datetime.combine(date, time.max)
+            
+            start_datetime = make_aware(datetime.combine(date, time.min))
+            end_datetime = make_aware(datetime.combine(date, time.max))
+
+            not_booked_time_periods = []
             current_datetime = start_datetime
 
-            available_time_slots = []
-            while current_datetime < end_datetime:
-                next_datetime = current_datetime + timedelta(minutes=30)
-                if not any(make_naive(start) <= current_datetime < make_naive(end) or make_naive(start) < next_datetime <= make_naive(end) for start, end in booked_time_slots):
-                    available_time_slots.append({
+            for booked_period in booked_time_periods:
+                period_start = booked_period.start
+                period_end = booked_period.end
+
+                if current_datetime < period_start:
+                    not_booked_time_periods.append({
                         'start': current_datetime.isoformat(),
-                        'end': next_datetime.isoformat()
+                        'end': period_start.isoformat()
                     })
-                current_datetime = next_datetime
-            return Response(BookedRoomsSerializer(available_time_slots, many=True).data)
+
+                current_datetime = period_end
+
+            if current_datetime < end_datetime:
+                not_booked_time_periods.append({
+                    'start': current_datetime.isoformat(),
+                    'end': end_datetime.isoformat()
+                })
+            return Response(BookedRoomsSerializer(not_booked_time_periods, many=True).data)
 
         elif request.method == 'GET':
-            # date = date.today()
-            booked_time_slots = BookRoomModel.objects.filter(
-            room_id=room,
-            start__date=date
-            ).values_list('start', 'end')
-            # booked_time_slots = [(make_naive(start), make_naive(end)) for start, end in booked_time_slots]
+            booked_time_periods = BookRoomModel.objects.filter(
+                room_id=room,
+                start__date=date
+            ).order_by('start')
 
-            start_datetime = datetime.combine(date, time.min)
-            end_datetime = datetime.combine(date, time.max)
+            
+            start_datetime = make_aware(datetime.combine(date, time.min))
+            end_datetime = make_aware(datetime.combine(date, time.max))
+
+            not_booked_time_periods = []
             current_datetime = start_datetime
 
-            available_time_slots = []
-            while current_datetime < end_datetime:
-                next_datetime = current_datetime + timedelta(minutes=30)
-                if not any(make_naive(start) <= current_datetime < make_naive(end) or make_naive(start) < next_datetime <= make_naive(end) for start, end in booked_time_slots):
-                    available_time_slots.append({
+            for booked_period in booked_time_periods:
+                period_start = booked_period.start
+                period_end = booked_period.end
+
+                if current_datetime < period_start:
+                    not_booked_time_periods.append({
                         'start': current_datetime.isoformat(),
-                        'end': next_datetime.isoformat()
-                        })
-                current_datetime = next_datetime
-            return Response(BookedRoomsSerializer(available_time_slots, many=True).data)
-    
+                        'end': period_start.isoformat()
+                    })
+
+                current_datetime = period_end
+
+            if current_datetime < end_datetime:
+                not_booked_time_periods.append({
+                    'start': current_datetime.isoformat(),
+                    'end': end_datetime.isoformat()
+                })
+            return Response(BookedRoomsSerializer(not_booked_time_periods, many=True).data)
 
 # {         
 #     "resident":{
