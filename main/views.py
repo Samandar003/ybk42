@@ -83,7 +83,7 @@ class RoomModelViewSet(ModelViewSet):
                 period_start = booked_period.start
                 period_end = booked_period.end
 
-                if current_datetime < period_start:
+                if current_datetime < period_start and (period_start-current_datetime)>=timedelta(minutes=2):
                     not_booked_time_periods.append({
                         'start': current_datetime.isoformat(),
                         'end': period_start.isoformat()
@@ -91,7 +91,7 @@ class RoomModelViewSet(ModelViewSet):
 
                 current_datetime = period_end
 
-            if current_datetime < end_datetime:
+            if current_datetime < end_datetime and (end_datetime-current_datetime)>=timedelta(minutes=2):
                 not_booked_time_periods.append({
                     'start': current_datetime.isoformat(),
                     'end': end_datetime.isoformat()
@@ -104,7 +104,6 @@ class RoomModelViewSet(ModelViewSet):
                 start__date=date
             ).order_by('start')
 
-            
             start_datetime = make_aware(datetime.combine(date, time.min))
             end_datetime = make_aware(datetime.combine(date, time.max))
 
@@ -115,7 +114,7 @@ class RoomModelViewSet(ModelViewSet):
                 period_start = booked_period.start
                 period_end = booked_period.end
 
-                if current_datetime < period_start:
+                if current_datetime < period_start and (period_start-current_datetime)>=timedelta(minutes=2):
                     not_booked_time_periods.append({
                         'start': current_datetime.isoformat(),
                         'end': period_start.isoformat()
@@ -123,17 +122,17 @@ class RoomModelViewSet(ModelViewSet):
 
                 current_datetime = period_end
 
-            if current_datetime < end_datetime:
+            if current_datetime < end_datetime and (end_datetime-current_datetime)>=timedelta(minutes=2):
                 not_booked_time_periods.append({
                     'start': current_datetime.isoformat(),
                     'end': end_datetime.isoformat()
                 })
             return Response(BookedRoomsSerializer(not_booked_time_periods, many=True).data)
 
-# {         
+# {
 #     "resident":{
-#         "name":"Samandar"
+#         "name":"Elon Musk"
 #     },
-#     "start":"2023-06-21 14:26:49.219717",
-#     "end":"2023-06-21 16:26:49.219717"
+#     "start":"2023-06-22 16:21:49.219717",
+#     "end":"2023-06-22 18:20:49.219717"
 # }
