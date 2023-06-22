@@ -82,8 +82,8 @@ class RoomModelViewSet(ModelViewSet):
                 next_datetime = current_datetime + timedelta(minutes=30)
                 if not any(make_naive(start) <= current_datetime < make_naive(end) or make_naive(start) < next_datetime <= make_naive(end) for start, end in booked_time_slots):
                     available_time_slots.append({
-                        'start': current_datetime.time().strftime('%I:%M %p'),
-                        'end': next_datetime.time().strftime('%I:%M %p')
+                        'start': current_datetime.isoformat(),
+                        'end': next_datetime.isoformat()
                     })
                 current_datetime = next_datetime
             return Response(BookedRoomsSerializer(available_time_slots, many=True).data)
@@ -105,9 +105,9 @@ class RoomModelViewSet(ModelViewSet):
                 next_datetime = current_datetime + timedelta(minutes=30)
                 if not any(make_naive(start) <= current_datetime < make_naive(end) or make_naive(start) < next_datetime <= make_naive(end) for start, end in booked_time_slots):
                     available_time_slots.append({
-                        'start': current_datetime.time().strftime('%I:%M %p'),
-                        'end': next_datetime.time().strftime('%I:%M %p')
-                    })
+                        'start': current_datetime.isoformat(),
+                        'end': next_datetime.isoformat()
+                        })
                 current_datetime = next_datetime
             return Response(BookedRoomsSerializer(available_time_slots, many=True).data)
     
