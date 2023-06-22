@@ -6,14 +6,14 @@ from .serializers import (
 from django.utils.timezone import make_aware, make_naive
 from rest_framework.views import APIView
 from django.db.models import Q
-from datetime import timedelta, time, date, timezone
+from datetime import timedelta, time, date, timezone, datetime
 from .models import RoomModel, BookRoomModel
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from . import utils
 from rest_framework import status
-from datetime import datetime, date
+import datetime as dt
 from rest_framework.exceptions import NotFound
 from django.http import Http404
 from rest_framework import filters
@@ -59,14 +59,13 @@ class RoomModelViewSet(ModelViewSet):
             return Response({"error": "uzr, siz tanlagan vaqtda xona band"}, status=status.HTTP_410_GONE)
     
 
-    @action(detail=True, methods=['GET', "POST"])
+    @action(detail=True, methods=["GET", "POST"])
     def availability(self, request, *args, **kwargs):
         room = self.get_object()
-        queryset = BookRoomModel.objects.filter(room_id=room)
+        date = dt.date.today()
         if request.method == 'POST':
             serializer = AvalibilitySerializer(data=request.data)
             serializer.is_valid(raise_exception=True)
-            # result = utils.avaliable(date=serializer.data.get('date'), queryset=queryset)
             date = datetime.strptime(serializer.data.get('date'), '%Y-%m-%d').date()
             booked_time_slots = BookRoomModel.objects.filter(
             room_id=room,
@@ -87,12 +86,10 @@ class RoomModelViewSet(ModelViewSet):
                         'end': next_datetime.time().strftime('%I:%M %p')
                     })
                 current_datetime = next_datetime
-            # return Response({'not_booked_time_slots': available_time_slots}, status=status.HTTP_200_OK)
             return Response(BookedRoomsSerializer(available_time_slots, many=True).data)
 
         elif request.method == 'GET':
-            # result = utils.avaliable(date=date.today(), queryset=queryset)
-            date = serializer.data.get('date')
+            # date = date.today()
             booked_time_slots = BookRoomModel.objects.filter(
             room_id=room,
             start__date=date
@@ -112,7 +109,6 @@ class RoomModelViewSet(ModelViewSet):
                         'end': next_datetime.time().strftime('%I:%M %p')
                     })
                 current_datetime = next_datetime
-            # return Response({'not_booked_time_slots': available_time_slots}, status=status.HTTP_200_OK)
             return Response(BookedRoomsSerializer(available_time_slots, many=True).data)
     
 
