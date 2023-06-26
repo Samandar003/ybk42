@@ -25,7 +25,7 @@ class BookRoomSerializer(serializers.ModelSerializer):
         current_datetime = timezone.now()
         if start < current_datetime or end < current_datetime:
             raise serializers.ValidationError("Datetime can't be in the past")
-        if start > end:
+        if start >= end:
             raise serializers.ValidationError("Ending datetime of booking must be later than the starting datetime")
         return data
     
