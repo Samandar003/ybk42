@@ -8,13 +8,15 @@ class RoomSerializer(serializers.ModelSerializer):
     type = serializers.ChoiceField(choices=RoomModel.CHOICES)
     class Meta:
         model = RoomModel
-        fields = ['name', 'type', 'capacity']
+        fields = ['id', 'name', 'type', 'capacity']
     
 class ResidentSerializer(serializers.Serializer):
     name = serializers.CharField()
 
 class BookRoomSerializer(serializers.ModelSerializer):
     resident = ResidentSerializer()
+    start = serializers.DateTimeField()
+    end = serializers.DateTimeField()
     class Meta:
         model = BookRoomModel
         fields = ["resident", "start", "end"]

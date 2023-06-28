@@ -30,7 +30,7 @@ class RoomModelViewSet(ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        query = self.request.query_params.get('q')
+        query = self.request.query_params.get('search')
         if query is not None:
             queryset = queryset.filter(name__icontains=query)
         return queryset
@@ -46,8 +46,6 @@ class RoomModelViewSet(ModelViewSet):
         room = self.get_object()
         serializer = BookRoomSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-
         bookedrooms = BookRoomModel.objects.filter(room_id=room)
         result = utils.check_availability(serializer.data.get('start'), serializer.data.get('end'), bookedrooms)
         if result is False:
