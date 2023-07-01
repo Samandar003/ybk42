@@ -55,7 +55,6 @@ class RoomModelViewSet(ModelViewSet):
             return Response({"message":"xona muvaffaqiyatli band qilindi"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"error": "uzr, siz tanlagan vaqtda xona band"}, status=status.HTTP_410_GONE)
-    
 
     @action(detail=True, methods=["GET", "POST"])
     def availability(self, request, *args, **kwargs):
@@ -83,16 +82,16 @@ class RoomModelViewSet(ModelViewSet):
 
                 if current_datetime < period_start and (period_start-current_datetime)>=timedelta(minutes=2):
                     not_booked_time_periods.append({
-                        'start': current_datetime.isoformat(),
-                        'end': period_start.isoformat()
+                        'start': current_datetime.strftime("%d-%m-%Y %H:%M:%S"),
+                        'end': period_start.strftime("%d-%m-%Y %H:%M:%S")
                     })
 
                 current_datetime = period_end
 
             if current_datetime < end_datetime and (end_datetime-current_datetime)>=timedelta(minutes=2):
                 not_booked_time_periods.append({
-                    'start': current_datetime.isoformat(),
-                    'end': end_datetime.isoformat()
+                    'start': current_datetime.strftime("%d-%m-%Y %H:%M:%S"),
+                    'end': end_datetime.strftime("%d-%m-%Y %H:%M:%S")
                 })
             return Response(BookedRoomsSerializer(not_booked_time_periods, many=True).data)
 
@@ -114,16 +113,16 @@ class RoomModelViewSet(ModelViewSet):
 
                 if current_datetime < period_start and (period_start-current_datetime)>=timedelta(minutes=2):
                     not_booked_time_periods.append({
-                        'start': current_datetime.isoformat(),
-                        'end': period_start.isoformat()
+                        'start': current_datetime.strftime("%d-%m-%Y %H:%M:%S"),
+                        'end': period_start.strftime("%d-%m-%Y %H:%M:%S")
                     })
 
                 current_datetime = period_end
 
             if current_datetime < end_datetime and (end_datetime-current_datetime)>=timedelta(minutes=2):
                 not_booked_time_periods.append({
-                    'start': current_datetime.isoformat(),
-                    'end': end_datetime.isoformat()
+                    'start': current_datetime.strftime("%d-%m-%Y %H:%M:%S"),
+                    'end': end_datetime.strftime("%d-%m-%Y %H:%M:%S")
                 })
             return Response(BookedRoomsSerializer(not_booked_time_periods, many=True).data)
 

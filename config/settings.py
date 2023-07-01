@@ -16,6 +16,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['http://34.121.251.33', 'localhost']
 
+DATE_INPUT_FORMATS = [
+    '%d-%m-%Y %H:%M:%S',
+]
 
 # Application definition
 

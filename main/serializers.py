@@ -15,8 +15,9 @@ class ResidentSerializer(serializers.Serializer):
 
 class BookRoomSerializer(serializers.ModelSerializer):
     resident = ResidentSerializer()
-    start = serializers.DateTimeField()
-    end = serializers.DateTimeField()
+    start = serializers.DateTimeField(input_formats=["%d-%m-%Y %H:%M:%S"])
+    end = serializers.DateTimeField(input_formats=["%d-%m-%Y %H:%M:%S"])
+
     class Meta:
         model = BookRoomModel
         fields = ["resident", "start", "end"]
@@ -31,11 +32,41 @@ class BookRoomSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Ending datetime of booking must be later than the starting datetime")
         return data
     
+    def validate_start(self, value):
+        try:
+            value.strftime('%d-%m-%Y %H:%M:%S')
+        except ValueError:
+            raise serializers.ValidationError("Invalid datetime format. Expected '%d-%m-%Y %H:%M:%S'.")
+        return value
+    
+    def validate_end(self, value):
+        try:
+            value.strftime('%d-%m-%Y %H:%M:%S')
+        except ValueError:
+            raise serializers.ValidationError("Invalid datetime format. Expected '%d-%m-%Y %H:%M:%S'.")
+        return value
+    def create(self, validated_data):
+        resident_name = validated_data.pop("resident")
+        start = validated_data.pop("start")
+        end = validated_data.pop("end")
+        return BookRoomModel.objects.create(resident=resident_name, start=start, end=end)
+        
 class BookedRoomsSerializer(serializers.Serializer):
     start = serializers.DateTimeField()
     end = serializers.DateTimeField()
     
-class AvalibilitySerializer(serializers.Serializer):
-    date = serializers.DateField(default=date.today)
-    
 
+class CustomDateTimeField(serializers.DateTimeField):
+    def __init__(self, *args, **kwargs):
+        kwargs['format'] = '%d-%m-%Y %H:%M:%S'
+        super().__init__(*args, **kwargs)
+    
+class AvalibilitySerializer(serializers.Serializer):
+    date = serializers.DateField(default=date.today, input_formats=['%d-%m-%Y'])
+
+    # def validate_date(self, value):
+    #     try:
+    #         value.strftime('%d-%m-%Y')
+    #     except ValueError:
+    #         raise serializers.ValidationError("Invalid date format. Expected '%d-%m-%Y'.")
+    #     return value

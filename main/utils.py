@@ -7,8 +7,9 @@ from rest_framework.response import Response
 
 def check_availability(start, end, queryset):
     booked = True
-    parsed_start = datetime.strptime(start, "%Y-%m-%dT%H:%M:%S.%fZ")
-    parsed_end = datetime.strptime(end, "%Y-%m-%dT%H:%M:%S.%fZ")
+    
+    parsed_start = datetime.strptime(start, '%Y-%m-%dT%H:%M:%SZ')
+    parsed_end = datetime.strptime(end, '%Y-%m-%dT%H:%M:%SZ')
     start = timezone.make_aware(parsed_start, timezone.get_default_timezone())
     end = timezone.make_aware(parsed_end, timezone.get_default_timezone())
 # 2023-06-07T12:34:56.789Z
