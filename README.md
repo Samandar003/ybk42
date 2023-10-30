@@ -45,7 +45,7 @@ response:
 }
 ``
 
-GET `/api/rooms/{id}` retrive a room by id
+GET `/api/rooms/{id}`  -  retrive a room by id
 
 HTTP 200
 
@@ -62,15 +62,15 @@ HTTP 404
 
 ``
 {
-  "error": "topilmadi"  # means not found
+  "error": "topilmadi"  
 }
-``
+``# means not found
 
 GET `/api/rooms/{id}/availability` - get information about available times of a room
 
 Parameters:
 
-`date`: if date is not specified , today's date should be considered
+`date`:  if date is not specified , today's date should be considered
 
 Response 200
 
@@ -111,6 +111,6 @@ HTTP 410: When a CHosen room is already booked
 
 ``
 {
-  "error": "uzr, siz tanlagan vaqtda xona band"  which means "sorry, the room is already booked"
+  "error": "uzr, siz tanlagan vaqtda xona band"  
 }
-``
+``  which means "sorry, the room is already booked"
